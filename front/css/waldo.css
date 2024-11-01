@@ -1,0 +1,11 @@
+:root {
+    background-color: var(--sunglow);
+    color: var(--jet);
+    font-family: Arial, Helvetica, sans-serif;
+
+    --teal: #177E89;
+    --midnight-green: #084C61;
+    --poppy: #DB3A34;
+    --sunglow: #FFC857;
+    --jet: #323031;
+}
