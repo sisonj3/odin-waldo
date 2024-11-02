@@ -1,33 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const centerOffset = 15;
+  const selectEnd = 25
+
+  // Function to get selected area
+  const selectArea = (event) => {
+    // Target values
+    let startX = event.target.offsetLeft + event.target.clientLeft;
+    let startY = event.target.offsetTop + event.target.clientTop;
+    let endX = event.target.offsetLeft + event.target.clientWidth;
+    let endY = event.target.offsetTop + event.target.clientHeight;
+
+    // Selected coordinates
+    let x = event.pageX - centerOffset;
+    let y = event.pageY - centerOffset;
+
+    // console.log(`Starting coords: (${startX}, ${startY})`);
+    // console.log(`Ending coords: (${endX}, ${endY})`);
+    //console.log(`Selected coords: (${x}, ${y})`);
+
+    let selectedArea = document.querySelector('#selectedArea');
+
+    selectedArea.hidden = false;
+
+    // Check that selection box does not exit tagging area
+    if (x < startX) {
+      x = startX;
+    } else if (x + selectEnd > endX) {
+      x = endX - selectEnd;
+    }
+
+    if (y < startY) {
+      y = startY;
+    } else if (y + selectEnd > endY) {
+      y = endY - selectEnd;
+    }
+
+    selectedArea.style.left = `${x}px`;
+    selectedArea.style.top = `${y}px`;
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Hello, World!</h1>
+
+      <div id='taggingArea' onClick={selectArea}>
+        <p>Image Here</p>        
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      <div id='selectedArea' hidden={true}></div>
     </>
   )
 }
