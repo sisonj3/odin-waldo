@@ -62,7 +62,13 @@ function Waldo() {
         </div>
       </div>
         
-      <div id='selectedArea' hidden={true}></div>
+      <div id='selectedArea' hidden={true}>
+        <div></div>
+        <select name="characters" id="characters">
+          <option value="waldo">Waldo</option>
+        </select>
+        <button id='charSubmit'>Submit</button>
+      </div>
     </>
   )
 }
