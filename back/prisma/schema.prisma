@@ -16,6 +16,7 @@ datasource db {
 model Location {
   id Int @id @default(autoincrement())
   characterName String @db.VarChar(255)
+  imageId Int
   x Int
   y Int
 }
