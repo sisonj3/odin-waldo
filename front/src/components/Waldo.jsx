@@ -8,12 +8,18 @@ function Waldo() {
 
   const centerOffset = 15;
   const selectEnd = 25
+  
+  let startX;
+  let startY;
+
+  let offsetX;
+  let offsetY;
 
   // Function to get selected area
   const selectArea = (event) => {
     // Start and end values of tagging area
-    let startX = event.target.offsetLeft + event.target.clientLeft;
-    let startY = event.target.offsetTop + event.target.clientTop;
+    startX = event.target.offsetLeft + event.target.clientLeft;
+    startY = event.target.offsetTop + event.target.clientTop;
     let endX = event.target.offsetLeft + event.target.clientWidth;
     let endY = event.target.offsetTop + event.target.clientHeight;
 
@@ -24,8 +30,8 @@ function Waldo() {
     let normX = x - startX;
     let normY = y - startY;
     // Offset coords for selection box
-    let offsetX = x - centerOffset;
-    let offsetY = y - centerOffset;
+    offsetX = x - centerOffset;
+    offsetY = y - centerOffset;
 
     console.log(`Starting coords: (${startX}, ${startY})`);
     console.log(`Ending coords: (${endX}, ${endY})`);
@@ -52,6 +58,42 @@ function Waldo() {
     selectedArea.style.top = `${offsetY}px`;
   };
 
+  // Check if coords are correct
+  const checkCoords = (event) => {    
+    let image = document.querySelector('.waldo');
+    let imageSrc = image.src;
+    let imageName = imageSrc.split('/');
+    let imageId = imageName[imageName.length - 1].split(".")[0];
+
+    console.log(imageId);
+
+    fetch(`http://localhost:3000/waldo/${imageId}`, {
+      mode: 'cors',
+      method: 'GET',
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+
+        let newX = offsetX - startX;
+        let newY = offsetY - startY;
+        let newEndX = newX + selectEnd;
+        let newEndY = newY + selectEnd;
+
+        console.log(newX + '<' + response.x + '<' + newEndX);
+        console.log(newY + '<' + response.y + '<' + newEndY);
+
+        if ((newX < response.x && response.x < newEndX) && (newY < response.y && response.y < newEndY)) {
+          alert("Found Waldo!");
+        } else {
+          alert("Wrong!");
+        }
+      })
+      .catch(error => console.error(error));
+    
+
+  }
+
   return (
     <>
       <h1>Where's Waldo?</h1>
@@ -67,7 +109,7 @@ function Waldo() {
         <select name="characters" id="characters">
           <option value="waldo">Waldo</option>
         </select>
-        <button id='charSubmit'>Submit</button>
+        <button id='charSubmit' onClick={checkCoords}>Submit</button>
       </div>
     </>
   )

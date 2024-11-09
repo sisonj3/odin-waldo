@@ -8,7 +8,7 @@ const getWaldo = async (req, res) => {
 
     const location = await query.getLocation(waldo, Number(req.params.id));
 
-    return res.send(location);
+    return res.json(location);
 }
 
 // Add new waldo location
