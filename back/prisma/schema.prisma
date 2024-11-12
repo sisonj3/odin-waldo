@@ -23,7 +23,7 @@ model Location {
 
 model Score {
   id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
+  name String @unique @db.VarChar(255)
   startTime DateTime @default(now()) @db.Timestamptz(3)
   endTime DateTime @db.Timestamptz(3)
   finalTime String @default("N/A") @db.VarChar(255)
