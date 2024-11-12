@@ -3,6 +3,8 @@ import useOutsideAlerter from './clickOutside';
 import { useRef } from 'react';
 
 function Waldo() {
+  const username = 'user';
+
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
 
@@ -14,6 +16,16 @@ function Waldo() {
 
   let offsetX;
   let offsetY;
+
+  // Create score
+  fetch(`http://localhost:3000/score`, {
+    mode: 'cors',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: username }),
+  }).catch(err => console.error(err));;
 
   // Function to get selected area
   const selectArea = (event) => {
@@ -84,14 +96,44 @@ function Waldo() {
         console.log(newY + '<' + response.y + '<' + newEndY);
 
         if ((newX < response.x && response.x < newEndX) && (newY < response.y && response.y < newEndY)) {
-          alert("Found Waldo!");
+          // Update score
+          fetch('http://localhost:3000/score', {
+            mode: 'cors',
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: username }),
+          }).then(response => {
+            // Get final time
+            fetch(`http://localhost:3000/score/${username}`, {
+              mode: 'cors',
+              methdod: 'GET',
+            })
+              .then(response => response.json())
+              .then(response => {
+                console.log(`Found in ${response.finalTime}`);
+              })
+              .then(response =>
+                // Reset score db
+                fetch(`http://localhost:3000/score`, {
+                  mode: 'cors',
+                  method: 'DELETE',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ name: username }),
+                  }).catch(err => console.error(err)))
+              .catch(error => console.error(error));
+          }).catch(err => console.error(err));;
+
+                    
         } else {
           alert("Wrong!");
         }
       })
       .catch(error => console.error(error));
     
-
   }
 
   return (

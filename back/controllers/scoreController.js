@@ -1,13 +1,24 @@
 const query = require('../prisma/queries');
 
 const createScore = async (req, res) => {
-    await query.createScore(req.body.name);
+    const score = await query.getScore(req.body.name);
 
-    res.send('Score added!');
+    if (!score) {
+        await query.createScore(req.body.name);
+
+        console.log('User added');
+        return res.json(`Score added for ${req.body.name}!`);
+    }
+        
+    console.log('User already exists!');
+    return res.json('User already exists');
+    
 }
 
 const getScore = async (req, res) => {
-    const score = await query.getScore(req.body.name);
+    console.log(req.params.name);
+
+    const score = await query.getScore(req.params.name);
 
     res.json(score);
 }

@@ -6,7 +6,7 @@ const scoreRouter = Router();
 
 scoreRouter.post("/", scoreController.createScore);
 
-scoreRouter.get("/", scoreController.getScore);
+scoreRouter.get("/:name", scoreController.getScore);
 
 scoreRouter.put("/", scoreController.updateScore);
 
